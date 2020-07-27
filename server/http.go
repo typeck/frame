@@ -22,8 +22,6 @@ type HttpConfig struct {
 	Pprof		bool			`toml:"pprof"`
 }
 
-var DefaultHttpServer *HttpServer
-
 var defaultHttpConfig = &HttpConfig{
 	Port:  8080,
 	Host:  "localhost",
@@ -35,10 +33,18 @@ func (c *HttpConfig)GetAddress() string {
 	return fmt.Sprintf("%s:%d", c.Host, c.Port)
 }
 
-func NewHttp(config *HttpConfig) *HttpServer {
+func NewHttpWithConfig(config *HttpConfig) *HttpServer {
 	return &HttpServer{
 		Echo:echo.New(),
 		config: config,
+	}
+
+}
+
+func NewHttp() *HttpServer {
+	return &HttpServer{
+		Echo:echo.New(),
+		config: defaultHttpConfig,
 	}
 
 }

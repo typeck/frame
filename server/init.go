@@ -12,9 +12,9 @@ func init() {
 	var httpConfig = &HttpConfig{}
 	err := conf.Unmarshal("frame.metrics", httpConfig)
 	if err != nil {
-		httpConfig = defaultHttpConfig
 		fmt.Printf("can't unmarshal http server config:%v, use default config.\n", err)
+	}else {
+		defaultHttpConfig = httpConfig
 	}
-	DefaultHttpServer = NewHttp(httpConfig)
-	fmt.Printf("init http server success:%s\n", util.String(httpConfig))
+	fmt.Printf("init http server config success:%s\n", util.String(httpConfig))
 }
