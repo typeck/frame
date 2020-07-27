@@ -16,13 +16,20 @@ type HttpServer struct {
 }
 
 type HttpConfig struct {
-	Port 		int
-	Host 		string
-	Debug 		bool
-	Pprof		bool
+	Port 		int				`toml:"port"`
+	Host 		string			`toml:"host"`
+	Debug 		bool			`toml:"debug"`
+	Pprof		bool			`toml:"pprof"`
 }
 
+var DefaultHttpServer *HttpServer
 
+var defaultHttpConfig = &HttpConfig{
+	Port:  8080,
+	Host:  "localhost",
+	Debug: true,
+	Pprof: true,
+}
 
 func (c *HttpConfig)GetAddress() string {
 	return fmt.Sprintf("%s:%d", c.Host, c.Port)

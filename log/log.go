@@ -23,7 +23,7 @@ type Config struct {
 
 type Field = zap.Field
 
-var DefaultLogger = New(DefaultConfig())
+var DefaultLogger *Logger
 
 func DefaultConfig() *Config {
 	return &Config{

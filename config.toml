@@ -1,18 +1,18 @@
-[app]
+[frame.app]
     name = "example"
 
-[http]
+[frame.http]
     port = 8080
     host = "localhost"
     debug = true
     pprof = true
 
-[metrics]
+[frame.metrics]
     namespace = "frame"
     name = "example"
     port = 10106
 
-[log]
+[frame.log]
     file_name = "example"
     path = "/data/log"
     max_size = 500
