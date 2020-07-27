@@ -1,0 +1,21 @@
+[app]
+    name = "example"
+
+[http]
+    port = 8080
+    host = "localhost"
+    debug = true
+    pprof = true
+
+[metrics]
+    namespace = "frame"
+    name = "example"
+    port = 10106
+
+[log]
+    file_name = "example"
+    path = "/data/log"
+    max_size = 500
+    max_backups = 10
+    max_age = 7
+    compress = false
