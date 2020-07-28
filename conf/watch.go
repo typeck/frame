@@ -1,8 +1,8 @@
 package conf
 
 import (
+	"fmt"
 	"github.com/fsnotify/fsnotify"
-	"github.com/typeck/frame/log"
 	"path/filepath"
 	"sync"
 )
@@ -10,7 +10,7 @@ import (
 func (c *Config) Watch() {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 	defer watcher.Close()
 
@@ -29,7 +29,7 @@ func (c *Config) Watch() {
 				if filepath.Clean(event.Name) == configFile && event.Op&writeOrCreateMask != 0 {
 					err := c.LoadFromFile()
 					if err != nil {
-						log.Errorf("error reading config file: %v\n", err)
+						fmt.Printf("error reading config file: %v\n", err)
 					}
 					if c.onChange != nil {
 						c.onChange(event)
@@ -42,7 +42,7 @@ func (c *Config) Watch() {
 
 			case err, ok := <-watcher.Errors:
 				if ok { // 'Errors' channel is not closed
-					log.Errorf("watcher error: %v\n", err)
+					fmt.Printf("watcher error: %v\n", err)
 				}
 				eventWg.Done()
 				return

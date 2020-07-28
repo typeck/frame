@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"golang.org/x/tools/go/ssa/interp/testdata/src/fmt"
+	"fmt"
 	"strings"
 )
 

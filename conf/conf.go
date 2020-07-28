@@ -1,9 +1,9 @@
 package conf
 
 import (
+	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/pelletier/go-toml"
-	"github.com/typeck/frame/log"
 	"os"
 	"strings"
 	"sync"
@@ -21,7 +21,7 @@ type Config struct {
 var DefaultConfig *Config
 
 var defaultOnchange = func(e fsnotify.Event) {
-	log.Info("config file changed:%s", e.Name)
+	fmt.Printf("config file changed:%s", e.Name)
 }
 
 //load config file into config struct.
