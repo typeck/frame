@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/typeck/frame/conf"
 	"github.com/typeck/frame/util"
-	//_ "go.uber.org/automaxprocs"
+	_ "go.uber.org/automaxprocs"
 )
 
 func init() {

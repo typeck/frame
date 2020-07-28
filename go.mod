@@ -10,7 +10,8 @@ require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/pelletier/go-toml v1.8.0
 	github.com/prometheus/client_golang v1.7.1
+	go.uber.org/automaxprocs v1.3.0
 	go.uber.org/zap v1.15.0
-	golang.org/x/tools v0.0.0-20191029190741-b9c20aec41a5
+	golang.org/x/tools v0.0.0-20191125144606-a911d9008d1f
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
