@@ -13,7 +13,7 @@ type Flag struct {
 
 var DefaultFlag *Flag
 
-func New(m map[string]string) *Flag{
+func New() *Flag{
 	return &Flag{
 		FlagSet: flag.NewFlagSet(filepath.Base(os.Args[0]), flag.ExitOnError),
 	}
