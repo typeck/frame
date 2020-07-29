@@ -10,7 +10,7 @@ import (
 func init() {
 	//init http server
 	var httpConfig = &HttpConfig{}
-	err := conf.Unmarshal("frame.metrics", httpConfig)
+	err := conf.Unmarshal("frame.http", httpConfig)
 	if err != nil {
 		fmt.Printf("can't unmarshal http server config:%v, use default config.\n", err)
 	}else {
