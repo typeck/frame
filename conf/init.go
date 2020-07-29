@@ -11,7 +11,7 @@ func init() {
 	configPath := flag.Get("config")
 	DefaultConfig, err = NewFromFile(configPath, watch)
 	if err != nil {
-		fmt.Println("init config error:", configPath, watch)
+		fmt.Printf("init config error,path:%s, watch:%v\n", configPath, watch)
 		return
 	}
 	fmt.Printf("init config success, path:%s, watch:%v\n", configPath, watch)

@@ -13,7 +13,7 @@ type Flag struct {
 	DefaultSet 		map[string]string
 }
 
-var DefaultFlag = New(nil)
+var DefaultFlag *Flag
 
 func New(m map[string]string) *Flag{
 	return &Flag{
