@@ -2,7 +2,6 @@ package flag
 
 import (
 	"flag"
-	"github.com/typeck/frame/util"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -10,7 +9,6 @@ import (
 
 type Flag struct {
 	*flag.FlagSet
-	DefaultSet 		map[string]string
 }
 
 var DefaultFlag *Flag
@@ -18,7 +16,6 @@ var DefaultFlag *Flag
 func New(m map[string]string) *Flag{
 	return &Flag{
 		FlagSet: flag.NewFlagSet(filepath.Base(os.Args[0]), flag.ExitOnError),
-		DefaultSet: m,
 	}
 }
 
@@ -41,16 +38,7 @@ func (f *Flag)Get(name string) string {
 	if fg != nil {
 		return fg.Value.String()
 	}
-	if v, ok := f.DefaultSet[name]; ok {
-		return v
-	}
 	return ""
-}
-
-func String() string {return DefaultFlag.String()}
-
-func (f *Flag) String() string {
-	return util.String(f.FlagSet.Args())
 }
 
 func GetBool(name string) bool {return DefaultFlag.GetBool(name)}
@@ -68,7 +56,5 @@ func(f *Flag)GetInt(name string) int {
 	v, _ := strconv.Atoi(str)
 	return v
 }
-
-
 
 
