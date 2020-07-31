@@ -57,4 +57,8 @@ func(f *Flag)GetInt(name string) int {
 	return v
 }
 
+func Register(name string, value string, usage string) {
+	DefaultFlag.String(name, value, usage)
+}
+
 

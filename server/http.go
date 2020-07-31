@@ -65,7 +65,7 @@ func (s *HttpServer) Serve() error{
 func MetricHandlerFunc(f echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		defer func() {
-			t := util.Str(c.Request().Header.Get("frame_timestamp")).MustInt64()
+			t := util.Str(c.Request().Header.Get("X-Frame-Timestamp")).MustInt64()
 			if t > 0 {
 				metrics.Histogram.WithLabelValues().Observe(float64(time.Now().UnixNano()-t) / float64(time.Millisecond))
 			}

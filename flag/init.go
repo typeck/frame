@@ -2,7 +2,8 @@ package flag
 
 import "fmt"
 
-func init() {
+
+func Init() {
 	DefaultFlag = New()
 	DefaultFlag.String("conf", "config-test.toml", "config file")
 	DefaultFlag.Bool("watch", false, "watch config change")
@@ -10,5 +11,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("init flag success:%s.", DefaultFlag.Name())
+	fmt.Printf("init flag success:%s.\n\n", DefaultFlag.Name())
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/typeck/frame/util"
 )
 
-func init() {
+func Init() {
 	var Config = &Config{}
 	err := conf.Unmarshal("frame.metrics", Config)
 	if err != nil {
@@ -14,5 +14,5 @@ func init() {
 	}else {
 		DefaultConfig = Config
 	}
-	fmt.Printf("init metrics success:%s", util.String(DefaultConfig))
+	fmt.Printf("init metrics success:%s.\n\n", util.String(DefaultConfig))
 }

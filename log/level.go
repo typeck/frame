@@ -5,26 +5,35 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+var levelMap = map[string]zap.LevelEnablerFunc{
+	"debug":debugLevel,
+	"info":infoLevel,
+	"warn":warnLevel,
+	"error":errorLevel,
+	"dpanic":dpanicLevel,
+	"panic":panicLevel,
+	"fatal":fatalLevel,
+}
 var (
-	DebugLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	debugLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.DebugLevel
 	})
-	InfoLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	infoLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.InfoLevel
 	})
-	WarnLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	warnLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.WarnLevel
 	})
-	ErrorLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	errorLevel =  zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.ErrorLevel
 	})
-	DpanicLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	dpanicLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.DPanicLevel
 	})
-	PanicLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	panicLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.PanicLevel
 	})
-	FatalLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
+	fatalLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl == zapcore.FatalLevel
 	})
 )

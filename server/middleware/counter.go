@@ -11,7 +11,7 @@ func Counter() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			t := time.Now()
-			c.Request().Header.Set("frame_timestamp", strconv.Itoa(int(t.UnixNano())))
+			c.Request().Header.Set("X-Frame-Timestamp", strconv.Itoa(int(t.UnixNano())))
 			metrics.Counter.WithLabelValues(c.Path(), metrics.COUNT, "req").Inc()
 			return nil
 		}

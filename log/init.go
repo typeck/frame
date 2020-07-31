@@ -6,7 +6,7 @@ import (
 	"github.com/typeck/frame/util"
 )
 
-func init() {
+func Init() {
 	var config = &Config{}
 	err := conf.Unmarshal("frame.log", config)
 	if err != nil {
@@ -14,5 +14,5 @@ func init() {
 		config = DefaultConfig()
 	}
 	DefaultLogger = New(config)
-	fmt.Printf("init log success:%s\n", util.String(config))
+	fmt.Printf("init log success:%s\n\n", util.String(config))
 }

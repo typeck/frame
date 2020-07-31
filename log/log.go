@@ -19,6 +19,7 @@ type Config struct {
 	MaxBackups 	int			`toml:"max_backups"`
 	MaxAge 		int			`toml:"max_age"`
 	Compress	bool		`toml:"compress"`
+	TraceLevel  string		`toml:"trace_level"`
 }
 
 type Field = zap.Field
@@ -31,20 +32,25 @@ func DefaultConfig() *Config {
 		MaxBackups: 10,
 		MaxAge:     1,
 		Compress:   false,
+		TraceLevel: "panic",
 	}
 }
 
-func New(conf *Config) *Logger{
+func New(conf *Config) *Logger {
 	core := zapcore.NewTee(
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "debug"), DebugLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "info"), InfoLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "warn"), WarnLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "error"), ErrorLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "dpanic"), DpanicLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "panic"), PanicLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "fatal"), FatalLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "debug"), debugLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "info"), infoLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "warn"), warnLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "error"), errorLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "dpanic"), dpanicLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "panic"), panicLevel),
+		zapcore.NewCore(getEncoder(), getLogWriter(conf, "fatal"), fatalLevel),
 		)
-	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(PanicLevel))
+	 v, ok := levelMap[strings.ToLower(conf.TraceLevel)]
+	 if !ok {
+		v = panicLevel
+	}
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(v))
 	return &Logger{
 		logger: logger,
 		sugar: logger.Sugar(),
@@ -69,17 +75,17 @@ func getEncoder() zapcore.Encoder {
 }
 
 func getLogWriter(conf *Config, levelName string) zapcore.WriteSyncer {
-	var name = conf.Path
+	var name string
 	index := strings.Index(conf.FileName, ".")
 	if index <= 0 {
-		name = conf.FileName + "_" + levelName + ".log"
+		if conf.FileName != "" {
+			name = conf.FileName + "_"
+		}
+		name = name + levelName + ".log"
 	}else {
 		name = conf.FileName[:index] + "_" + levelName + conf.FileName[index:]
 	}
-	if conf.FileName == "" {
-		name = levelName + ".log"
-	}
-
+	name = conf.Path + name
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   name,
 		MaxSize:    conf.MaxSize,

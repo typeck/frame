@@ -7,7 +7,7 @@ import (
 	_ "go.uber.org/automaxprocs"
 )
 
-func init() {
+func Init() {
 	//init http server
 	var httpConfig = &HttpConfig{}
 	err := conf.Unmarshal("frame.http", httpConfig)
@@ -16,5 +16,5 @@ func init() {
 	}else {
 		defaultHttpConfig = httpConfig
 	}
-	fmt.Printf("init http server config success:%s\n", util.String(httpConfig))
+	fmt.Printf("init http server config success:%s\n\n", util.String(httpConfig))
 }
