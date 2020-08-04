@@ -10,7 +10,7 @@ const (
 var (
 	Counter = NewCounterVec(&CounterVecOpts{
 		Name:      "counter",
-		Help:      "frame watch error count",
+		Help:      "frame watch count",
 		Labels:    []string{"name", "type", "msg"},
 	})
 	

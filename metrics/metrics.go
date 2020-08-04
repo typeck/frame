@@ -1,11 +1,7 @@
 package metrics
 
 import (
-	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/typeck/frame/log"
-	"net/http"
 )
 
 type Config struct {
@@ -69,19 +65,4 @@ func NewHistogramVec(opts *HistogramVecOpts) *histogramVec {
 	return &histogramVec{
 		HistogramVec: vec,
 	}
-}
-
-
-func init() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
-		promhttp.Handler().ServeHTTP(w, r)
-	})
-	go func() {
-		err := http.ListenAndServe(fmt.Sprintf(":%d", DefaultConfig.Port), mux)
-		if err != nil {
-			log.Panic(err)
-		}
-	}()
-	fmt.Printf("metrics listen in :%d", DefaultConfig.Port)
 }
