@@ -13,7 +13,7 @@ func Counter() echo.MiddlewareFunc {
 			t := time.Now()
 			c.Request().Header.Set("X-Frame-Timestamp", strconv.Itoa(int(t.UnixNano())))
 			metrics.Counter.WithLabelValues(c.Path(), metrics.COUNT, "req").Inc()
-			return nil
+			return next(c)
 		}
 	}
 }
