@@ -36,38 +36,38 @@ func Fatal(args ...interface{}) {
 }
 
 // Debugw ...
-func Debugw(msg string, fields ...Field) {
-	DefaultLogger.Debugw(msg, fields...)
+func Debugh(msg string, fields ...Field) {
+	DefaultLogger.Debugh(msg, fields...)
 }
 
 // Infow ...
-func Infow(msg string, fields ...Field) {
-	DefaultLogger.Infow(msg, fields...)
+func Infoh(msg string, fields ...Field) {
+	DefaultLogger.Infoh(msg, fields...)
 }
 
 // Warnw ...
-func Warnw(msg string, fields ...Field) {
-	DefaultLogger.Warnw(msg, fields...)
+func Warnh(msg string, fields ...Field) {
+	DefaultLogger.Warnh(msg, fields...)
 }
 
 // Errorw ...
-func Errorw(msg string, fields ...Field) {
-	DefaultLogger.Errorw(msg, fields...)
+func Errorh(msg string, fields ...Field) {
+	DefaultLogger.Errorh(msg, fields...)
 }
 
 // Panicw ...
-func Panicw(msg string, fields ...Field) {
-	DefaultLogger.Panicw(msg, fields...)
+func Panich(msg string, fields ...Field) {
+	DefaultLogger.Panich(msg, fields...)
 }
 
 // DPanicw ...
-func DPanicw(msg string, fields ...Field) {
-	DefaultLogger.DPanicw(msg, fields...)
+func DPanich(msg string, fields ...Field) {
+	DefaultLogger.DPanich(msg, fields...)
 }
 
 // Fatalw ...
-func Fatalw(msg string, fields ...Field) {
-	DefaultLogger.Fatalw(msg, fields...)
+func Fatalh(msg string, fields ...Field) {
+	DefaultLogger.Fatalh(msg, fields...)
 }
 
 // Debugf ...
@@ -103,5 +103,40 @@ func DPanicf(msg string, args ...interface{}) {
 // Fatalf ...
 func Fatalf(msg string, args ...interface{}) {
 	DefaultLogger.Fatalf(msg, args...)
+}
+
+// Debugw ...
+func Debugw(msg string, args ...interface{}) {
+	DefaultLogger.Debugw(msg, args...)
+}
+
+// Infow ...
+func Infow(msg string, args ...interface{}) {
+	DefaultLogger.Infow(msg, args...)
+}
+
+// Warnf ...
+func Warnw(msg string, args ...interface{}) {
+	DefaultLogger.Warnw(msg, args...)
+}
+
+// Errorf ...
+func Errorw(msg string, args ...interface{}) {
+	DefaultLogger.Errorw(msg, args...)
+}
+
+// Panicf ...
+func Panicw(msg string, args ...interface{}) {
+	DefaultLogger.Panicw(msg, args...)
+}
+
+// DPanicf ...
+func DPanicw(msg string, args ...interface{}) {
+	DefaultLogger.DPanicw(msg, args...)
+}
+
+// Fatalf ...
+func Fatalw(msg string, args ...interface{}) {
+	DefaultLogger.Fatalw(msg, args...)
 }
 

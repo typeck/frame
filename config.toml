@@ -19,4 +19,4 @@
     max_backups = 10
     max_age = 7
     compress = false
-    trace_level = "panic"
+    encoding = "json"

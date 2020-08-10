@@ -19,7 +19,8 @@ type Config struct {
 	MaxBackups 	int			`toml:"max_backups"`
 	MaxAge 		int			`toml:"max_age"`
 	Compress	bool		`toml:"compress"`
-	TraceLevel  string		`toml:"trace_level"`
+	//json or console
+	Encoding 	string		`toml:"encoding"`
 }
 
 type Field = zap.Field
@@ -32,32 +33,20 @@ func DefaultConfig() *Config {
 		MaxBackups: 10,
 		MaxAge:     1,
 		Compress:   false,
-		TraceLevel: "panic",
+		Encoding: "json",
 	}
 }
 
-func New(conf *Config) *Logger {
-	core := zapcore.NewTee(
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "debug"), debugLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "info"), infoLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "warn"), warnLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "error"), errorLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "dpanic"), dpanicLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "panic"), panicLevel),
-		zapcore.NewCore(getEncoder(), getLogWriter(conf, "fatal"), fatalLevel),
-		)
-	 v, ok := levelMap[strings.ToLower(conf.TraceLevel)]
-	 if !ok {
-		v = panicLevel
-	}
-	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(v))
+func New(conf *Config, opts... zap.Option) *Logger {
+	core := buildCore(conf)
+	logger := zap.New(core, opts...)
 	return &Logger{
 		logger: logger,
 		sugar: logger.Sugar(),
 	}
 }
 
-func getEncoder() zapcore.Encoder {
+func getEncoder(conf *Config) zapcore.Encoder {
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:        "ts",
 		LevelKey:       "level",
@@ -70,6 +59,9 @@ func getEncoder() zapcore.Encoder {
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
+	}
+	if conf.Encoding == "json" {
+		return zapcore.NewJSONEncoder(encoderConfig)
 	}
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
@@ -96,7 +88,23 @@ func getLogWriter(conf *Config, levelName string) zapcore.WriteSyncer {
 	return zapcore.AddSync(lumberJackLogger)
 }
 
+func buildCore(conf *Config) zapcore.Core{
+	core := zapcore.NewTee(
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "debug"), DebugLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "info"), InfoLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "warn"), WarnLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "error"), ErrorLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "dpanic"), DpanicLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "panic"), PanicLevel),
+		zapcore.NewCore(getEncoder(conf), getLogWriter(conf, "fatal"), FatalLevel),
+	)
+	return core
+}
 
+func (logger *Logger) WithOptions(opts... zap.Option) {
+	logger.logger = logger.logger.WithOptions(opts...)
+	logger.sugar = logger.logger.Sugar()
+}
 
 // Info ...
 func (logger *Logger) Info(args ...interface{}) {
@@ -107,8 +115,12 @@ func (logger *Logger) Infof(template string, args ...interface{}) {
 	logger.sugar.Infof(template, args...)
 }
 
-func (logger *Logger) Infow(msg string, fields ...Field) {
+func (logger *Logger) Infoh(msg string, fields ...Field) {
 	logger.logger.Info(msg, fields...)
+}
+
+func (logger *Logger) Infow(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Infow(msg, keysAndValues...)
 }
 
 //Warn ...
@@ -120,8 +132,12 @@ func (logger *Logger) Warnf(template string, args ...interface{}) {
 	logger.sugar.Warnf(template, args...)
 }
 
-func (logger *Logger) Warnw(msg string, fields ...Field) {
+func (logger *Logger) Warnh(msg string, fields ...Field) {
 	logger.logger.Warn(msg, fields...)
+}
+
+func (logger *Logger) Warnw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Warnw(msg, keysAndValues...)
 }
 
 //Error ...
@@ -133,8 +149,12 @@ func (logger *Logger) Errorf(template string, args ...interface{}) {
 	logger.sugar.Errorf(template, args...)
 }
 
-func (logger *Logger) Errorw(msg string, fields ...Field) {
+func (logger *Logger) Errorh(msg string, fields ...Field) {
 	logger.logger.Error(msg, fields...)
+}
+
+func (logger *Logger) Errorw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Errorw(msg, keysAndValues...)
 }
 
 //Debug ...
@@ -146,9 +166,14 @@ func (logger *Logger) Debugf(template string, args ...interface{}) {
 	logger.sugar.Debugf(template, args...)
 }
 
-func (logger *Logger) Debugw(msg string, fields ...Field) {
+func (logger *Logger) Debugh(msg string, fields ...Field) {
 	logger.logger.Debug(msg, fields...)
 }
+
+func (logger *Logger) Debugw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Debugw(msg, keysAndValues...)
+}
+
 
 //Fatal ...
 func (logger *Logger) Fatal(args ...interface{}) {
@@ -159,8 +184,12 @@ func (logger *Logger) Fatalf(template string, args ...interface{}) {
 	logger.sugar.Fatalf(template, args...)
 }
 
-func (logger *Logger) Fatalw(msg string, fields ...Field) {
+func (logger *Logger) Fatalh(msg string, fields ...Field) {
 	logger.logger.Fatal(msg, fields...)
+}
+
+func (logger *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Fatalw(msg, keysAndValues...)
 }
 
 //Panic
@@ -172,8 +201,12 @@ func (logger *Logger) Panicf(template string, args ...interface{}) {
 	logger.sugar.Panicf(template, args...)
 }
 
-func (logger *Logger) Panicw(msg string, fields ...Field) {
+func (logger *Logger) Panich(msg string, fields ...Field) {
 	logger.logger.Panic(msg, fields...)
+}
+
+func (logger *Logger) Panicw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.Panicw(msg, keysAndValues...)
 }
 
 //Dpanic
@@ -185,6 +218,10 @@ func (logger *Logger) DPanicf(template string, args ...interface{}) {
 	logger.sugar.DPanicf(template, args...)
 }
 
-func (logger *Logger) DPanicw(msg string, fields ...Field) {
+func (logger *Logger) DPanich(msg string, fields ...Field) {
 	logger.logger.DPanic(msg, fields...)
+}
+
+func (logger *Logger) DPanicw(msg string, keysAndValues ...interface{}) {
+	logger.sugar.DPanicw(msg, keysAndValues...)
 }
