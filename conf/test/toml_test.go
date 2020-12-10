@@ -21,8 +21,13 @@ func TestToml(t *testing.T) {
 	var db = db{}
 	err = config.Unmarshal("postgres.db1", &db)
 	fmt.Println(db, err)
-		for{
-			time.Sleep(time.Second)
-			fmt.Println(config.Get("postgres.db1.user_name"))
-		}
+	fmt.Println(config.GetStr("postgres.db1"))
+	fmt.Println(config.GetInt("postgres.db1"))
+	fmt.Println(config.GetStr("postgres.db1.num"))
+	fmt.Println(config.GetInt("postgres.db1.num"))
+
+	for {
+		time.Sleep(time.Second)
+		fmt.Println(config.Get("postgres.db1.user_name"))
+	}
 }

@@ -1,6 +1,7 @@
 [postgres.db1]
 user_name = "pelletierlllllll"
 password = "mypassword"
+num = 1
 
 [postgres.db2]
 user_name = "pelletier2"

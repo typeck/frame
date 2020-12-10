@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/pelletier/go-toml"
+	"github.com/typeck/frame/errors"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 )
 
 type Config struct {
 	mux 		sync.RWMutex
-	tree 		*toml.Tree
+	Tree 		*toml.Tree
 	cache 		sync.Map
 	watch 		bool
 	filePath 	string
@@ -46,7 +48,7 @@ func (c *Config) LoadFromFile() error{
 		return  err
 	}
 	c.mux.Lock()
-	c.tree = tree
+	c.Tree = tree
 	c.mux.Unlock()
 	c.cache = sync.Map{}
 	if c.onChange == nil {
@@ -66,10 +68,13 @@ func (c *Config) Get(key string) interface{} {
 		return v
 	}
 	c.mux.RLock()
-	node := c.tree.GetPath(strings.Split(key, "."))
+	node := c.Tree.GetPath(strings.Split(key, "."))
+	if node == nil {
+		return nil
+	}
 	c.mux.RUnlock()
 	if v, ok := node.(*toml.Tree); ok {
-		clone := &Config{tree: v}
+		clone := &Config{Tree: v}
 		c.cache.Store(key, clone)
 		return clone
 	}
@@ -78,26 +83,56 @@ func (c *Config) Get(key string) interface{} {
 }
 
 func (c *Config) GetInt(key string) int {
-	return c.Get(key).(int)
+	return int(c.GetInt64(key))
 }
 
 func (c *Config) GetInt64(key string) int64 {
-	return c.Get(key).(int64)
+	value := c.Get(key)
+	if value == nil {
+		return 0
+	}
+	switch v := value.(type) {
+	case int64:
+		return v
+	case int:
+		return int64(v)
+	case string:
+		tmp,_ := strconv.Atoi(v)
+		return int64(tmp)
+	default:
+		return 0
+	}
 }
 
 func (c *Config) GetStr(key string) string {
-	return c.Get(key).(string)
+	value := c.Get(key)
+	if value == nil {
+		return ""
+	}
+	switch v := value.(type) {
+	case string:
+		return v
+	case int64:
+		return strconv.Itoa(int(v))
+	case int:
+		return strconv.Itoa(v)
+	default:
+		return ""
+	}
 }
 
 func (c *Config) Unmarshal(key string, v interface{}) error {
 	if key == "" {
-		return c.tree.Unmarshal(v)
+		return c.Tree.Unmarshal(v)
 	}
-	node := c.Get(key).(*Config)
-	return node.tree.Unmarshal(v)
+	node, ok := c.Get(key).(*Config);
+	if !ok {
+		return errors.New("can't unmarshal.")
+	}
+	return node.Tree.Unmarshal(v)
 }
 
 func (c *Config) String() string {
-	result, _ := c.tree.ToTomlString()
+	result, _ := c.Tree.ToTomlString()
 	return result
 }

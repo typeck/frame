@@ -8,8 +8,8 @@ import (
 )
 
 type Logger struct {
-	logger *zap.Logger
-	sugar  *zap.SugaredLogger
+	Logger *zap.Logger
+	Sugar  *zap.SugaredLogger
 }
 
 type Config struct {
@@ -37,12 +37,16 @@ func DefaultConfig() *Config {
 	}
 }
 
+func SetDefaultLogger(logger *Logger) {
+	DefaultLogger = logger
+}
+
 func New(conf *Config, opts... zap.Option) *Logger {
 	core := buildCore(conf)
 	logger := zap.New(core, opts...)
 	return &Logger{
-		logger: logger,
-		sugar: logger.Sugar(),
+		Logger: logger,
+		Sugar: logger.Sugar(),
 	}
 }
 
@@ -102,126 +106,126 @@ func buildCore(conf *Config) zapcore.Core{
 }
 
 func (logger *Logger) WithOptions(opts... zap.Option) {
-	logger.logger = logger.logger.WithOptions(opts...)
-	logger.sugar = logger.logger.Sugar()
+	logger.Logger = logger.Logger.WithOptions(opts...)
+	logger.Sugar = logger.Logger.Sugar()
 }
 
 // Info ...
 func (logger *Logger) Info(args ...interface{}) {
-	logger.sugar.Info(args...)
+	logger.Sugar.Info(args...)
 }
 
 func (logger *Logger) Infof(template string, args ...interface{}) {
-	logger.sugar.Infof(template, args...)
+	logger.Sugar.Infof(template, args...)
 }
 
 func (logger *Logger) Infoh(msg string, fields ...Field) {
-	logger.logger.Info(msg, fields...)
+	logger.Logger.Info(msg, fields...)
 }
 
 func (logger *Logger) Infow(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Infow(msg, keysAndValues...)
+	logger.Sugar.Infow(msg, keysAndValues...)
 }
 
 //Warn ...
 func (logger *Logger) Warn(args ...interface{}) {
-	logger.sugar.Warn(args...)
+	logger.Sugar.Warn(args...)
 }
 
 func (logger *Logger) Warnf(template string, args ...interface{}) {
-	logger.sugar.Warnf(template, args...)
+	logger.Sugar.Warnf(template, args...)
 }
 
 func (logger *Logger) Warnh(msg string, fields ...Field) {
-	logger.logger.Warn(msg, fields...)
+	logger.Logger.Warn(msg, fields...)
 }
 
 func (logger *Logger) Warnw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Warnw(msg, keysAndValues...)
+	logger.Sugar.Warnw(msg, keysAndValues...)
 }
 
 //Error ...
 func (logger *Logger) Error(args ...interface{}) {
-	logger.sugar.Error(args...)
+	logger.Sugar.Error(args...)
 }
 
 func (logger *Logger) Errorf(template string, args ...interface{}) {
-	logger.sugar.Errorf(template, args...)
+	logger.Sugar.Errorf(template, args...)
 }
 
 func (logger *Logger) Errorh(msg string, fields ...Field) {
-	logger.logger.Error(msg, fields...)
+	logger.Logger.Error(msg, fields...)
 }
 
 func (logger *Logger) Errorw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Errorw(msg, keysAndValues...)
+	logger.Sugar.Errorw(msg, keysAndValues...)
 }
 
 //Debug ...
 func (logger *Logger) Debug(args ...interface{}) {
-	logger.sugar.Debug(args...)
+	logger.Sugar.Debug(args...)
 }
 
 func (logger *Logger) Debugf(template string, args ...interface{}) {
-	logger.sugar.Debugf(template, args...)
+	logger.Sugar.Debugf(template, args...)
 }
 
 func (logger *Logger) Debugh(msg string, fields ...Field) {
-	logger.logger.Debug(msg, fields...)
+	logger.Logger.Debug(msg, fields...)
 }
 
 func (logger *Logger) Debugw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Debugw(msg, keysAndValues...)
+	logger.Sugar.Debugw(msg, keysAndValues...)
 }
 
 
 //Fatal ...
 func (logger *Logger) Fatal(args ...interface{}) {
-	logger.sugar.Fatal(args...)
+	logger.Sugar.Fatal(args...)
 }
 
 func (logger *Logger) Fatalf(template string, args ...interface{}) {
-	logger.sugar.Fatalf(template, args...)
+	logger.Sugar.Fatalf(template, args...)
 }
 
 func (logger *Logger) Fatalh(msg string, fields ...Field) {
-	logger.logger.Fatal(msg, fields...)
+	logger.Logger.Fatal(msg, fields...)
 }
 
 func (logger *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Fatalw(msg, keysAndValues...)
+	logger.Sugar.Fatalw(msg, keysAndValues...)
 }
 
 //Panic
 func (logger *Logger) Panic(args ...interface{}) {
-	logger.sugar.Panic(args...)
+	logger.Sugar.Panic(args...)
 }
 
 func (logger *Logger) Panicf(template string, args ...interface{}) {
-	logger.sugar.Panicf(template, args...)
+	logger.Sugar.Panicf(template, args...)
 }
 
 func (logger *Logger) Panich(msg string, fields ...Field) {
-	logger.logger.Panic(msg, fields...)
+	logger.Logger.Panic(msg, fields...)
 }
 
 func (logger *Logger) Panicw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.Panicw(msg, keysAndValues...)
+	logger.Sugar.Panicw(msg, keysAndValues...)
 }
 
 //Dpanic
 func (logger *Logger) DPanic(args ...interface{}) {
-	logger.sugar.DPanic(args...)
+	logger.Sugar.DPanic(args...)
 }
 
 func (logger *Logger) DPanicf(template string, args ...interface{}) {
-	logger.sugar.DPanicf(template, args...)
+	logger.Sugar.DPanicf(template, args...)
 }
 
 func (logger *Logger) DPanich(msg string, fields ...Field) {
-	logger.logger.DPanic(msg, fields...)
+	logger.Logger.DPanic(msg, fields...)
 }
 
 func (logger *Logger) DPanicw(msg string, keysAndValues ...interface{}) {
-	logger.sugar.DPanicw(msg, keysAndValues...)
+	logger.Sugar.DPanicw(msg, keysAndValues...)
 }
