@@ -71,16 +71,19 @@ func getEncoder(conf *Config) zapcore.Encoder {
 }
 
 func getLogWriter(conf *Config, levelName string) zapcore.WriteSyncer {
-	var name string
-	index := strings.Index(conf.FileName, ".")
-	if index <= 0 {
-		if conf.FileName != "" {
-			name = conf.FileName + "_"
-		}
-		name = name + levelName + ".log"
-	}else {
-		name = conf.FileName[:index] + "_" + levelName + conf.FileName[index:]
+	dots := strings.Split(conf.FileName, ".")
+	var name = dots[0]
+	var suffix string
+	if len(dots) > 1 {
+		suffix = strings.Join(dots[1:], ".")
 	}
+	if suffix == "" {
+		suffix = "log"
+	}
+	if name != "" {
+		name = name + "_"
+	}
+	name = name +  levelName + "." + suffix
 	name = conf.Path + name
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   name,

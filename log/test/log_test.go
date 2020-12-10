@@ -23,6 +23,9 @@ func TestSugaredLog(t *testing.T) {
 }
 
 func TestLog(t *testing.T) {
+	config := log.DefaultConfig()
+	config.FileName = ".log"
+	log.SetDefaultLogger(log.New(config))
 	log.Infow("tttt", log.Field{Key: "key", Type: zapcore.Int64Type, Integer: 65})
 	log.Error("ggjggk")
 	log.Debug("ffjfj")
