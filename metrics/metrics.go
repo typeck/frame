@@ -23,7 +23,7 @@ type CounterVecOpts struct {
 	Labels    []string
 }
 
-type counterVec struct {
+type CounterVec struct {
 	*prometheus.CounterVec
 }
 
@@ -34,11 +34,11 @@ type HistogramVecOpts struct {
 	Buckets   []float64
 }
 
-type histogramVec struct {
+type HistogramVec struct {
 	*prometheus.HistogramVec
 }
 
-func NewCounterVec(opts *CounterVecOpts) *counterVec{
+func NewCounterVec(opts *CounterVecOpts) *CounterVec{
 	vec := prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: DefaultConfig.Namespace,
@@ -47,12 +47,12 @@ func NewCounterVec(opts *CounterVecOpts) *counterVec{
 			Help:      opts.Help,
 		}, opts.Labels)
 	prometheus.MustRegister(vec)
-	return &counterVec{
+	return &CounterVec{
 		CounterVec: vec,
 	}
 }
 
-func NewHistogramVec(opts *HistogramVecOpts) *histogramVec {
+func NewHistogramVec(opts *HistogramVecOpts) *HistogramVec {
 	vec := prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: DefaultConfig.Namespace,
@@ -62,7 +62,7 @@ func NewHistogramVec(opts *HistogramVecOpts) *histogramVec {
 			Buckets:   opts.Buckets,
 		}, opts.Labels)
 	prometheus.MustRegister(vec)
-	return &histogramVec{
+	return &HistogramVec{
 		HistogramVec: vec,
 	}
 }
